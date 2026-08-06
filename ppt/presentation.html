@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WBOS — WhatsApp Business CRM</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #f0f2f5;
+      --line: #d1d7db;
+      --ink: #111b21;
+      --dim: #54656f;
+      --green: #00a884;
+      --green-dk: #008069;
+      --blue: #027eb5;
+      --amber: #e38900;
+      --red: #ea0038;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.015) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+      background-size: 40px 40px;
+      font: 16px/1.5 Georgia, "Times New Roman", "Courier New", serif;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8vh 8vw;
+      opacity: 0;
+      transition: opacity .25s ease;
+      overflow: auto;
+      /* never clip on a short projector screen */
+    }
+
+    .slide.on {
+      display: flex;
+      opacity: 1
+    }
+
+    .kicker {
+      color: var(--green);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 2vh
+    }
+
+    h1 {
+      font-size: clamp(32px, 5.6vw, 82px);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      font-weight: 800
+    }
+
+    h2 {
+      font-size: clamp(24px, 3.7vw, 50px);
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      font-weight: 800;
+      margin-bottom: 2.6vh
+    }
+
+    h3 {
+      font-size: clamp(15px, 1.6vw, 23px);
+      font-weight: 700;
+      margin-bottom: .6em
+    }
+
+    p,
+    li,
+    td,
+    th {
+      font-size: clamp(14px, 1.45vw, 21px);
+      color: var(--dim)
+    }
+
+    strong {
+      color: var(--ink)
+    }
+
+    .lead {
+      font-size: clamp(17px, 2.1vw, 30px);
+      color: var(--ink);
+      max-width: 650px;
+      margin-top: 3vh;
+      font-weight: 500
+    }
+
+    .sub {
+      margin-top: 2.4vh;
+      font-size: clamp(13px, 1.4vw, 20px)
+    }
+
+    .takeaway {
+      font-size: clamp(20px, 2.5vw, 28px);
+      line-height: 1.4;
+      margin-top: 4vh;
+      color: var(--ink);
+    }
+
+    /* Scoped Slide Styles */
+    .slide-title {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 6vw;
+      text-align: left;
+    }
+
+    .slide-title .title-left {
+      flex: 1;
+      max-width: 650px;
+    }
+
+    .slide-title .kicker {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+      color: var(--green);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .slide-title h1 {
+      font-size: clamp(48px, 5.5vw, 68px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin: 0 0 24px 0;
+    }
+
+    .slide-title h1 .light {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    .slide-title .subtitle {
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--dim);
+      margin-bottom: 24px;
+    }
+
+    .slide-title .subtitle .strong {
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .slide-title .subtitle .demo-ready {
+      color: var(--green);
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .slide-title .divider {
+      height: 2px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .slide-title .team {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin-bottom: 24px;
+    }
+
+    .slide-title .team strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .slide-title .proof-strip {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .slide-title .proof-strip span {
+      display: flex;
+      align-items: center;
+    }
+
+    .slide-title .proof-strip span::after {
+      content: "•";
+      margin-left: 16px;
+    }
+
+    .slide-title .proof-strip span:last-child::after {
+      content: "";
+      margin-left: 0;
+    }
+
+    /* Right Side Diagram */
+    .slide-title .title-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diagram-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.03);
+    }
+
+    .diag-app {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--green);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 12px;
+    }
+
+    .diag-arrow {
+      margin: 16px 0;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.15);
+    }
+
+    .diag-engine {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #fff;
+      border: 3px solid var(--ink);
+      color: var(--ink);
+      font-size: 24px;
+      font-weight: 800;
+      padding: 20px 40px;
+      border-radius: 12px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .diag-branch-arrows {
+      display: flex;
+      justify-content: space-around;
+      width: 90%;
+      margin: 16px 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.15);
+    }
+
+    .diag-targets {
+      display: flex;
+      gap: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .diag-target {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dim);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+
+    .slide-problem {
+      padding-top: 8vh;
+    }
+
+    .slide-problem .kicker {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .slide-problem h2 {
+      font-size: clamp(56px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 5vh;
+    }
+
+    .slide-problem h2 .light {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    .slide-problem .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 0;
+      margin-bottom: 5vh;
+    }
+
+    .slide-problem .card {
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 24px;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.03);
+    }
+
+    .slide-problem .card-header {
+      margin-bottom: 32px;
+    }
+
+    .slide-problem .card-label {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+
+    .slide-problem .card-wrong .card-label {
+      color: #e53e3e;
+      /* subtle red */
+    }
+
+    .slide-problem .card-reality .card-label {
+      color: #d69e2e;
+      /* subtle gold/orange */
+    }
+
+    .slide-problem .card h3 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .slide-problem ul {
+      gap: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 32px;
+    }
+
+    .slide-problem ul li {
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--dim);
+      padding-left: 28px;
+    }
+
+    /* override global ::before arrow with a minimal dot */
+    .slide-problem ul li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      top: 13px;
+      left: 4px;
+    }
+
+    .slide-problem .takeaway {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: center;
+      margin: 0 auto;
+      color: var(--dim);
+    }
+
+    .slide-problem .takeaway strong {
+      display: block;
+      color: var(--ink);
+      font-size: 40px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .slide-problem .takeaway strong span {
+      color: var(--green);
+    }
+
+    .slide-insight {
+      padding-top: 8vh;
+    }
+
+    .slide-insight .kicker {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .slide-insight h2 {
+      font-size: clamp(56px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 6vh;
+    }
+
+    .slide-insight h2 .light {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    .slide-insight .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 6vh;
+    }
+
+    .slide-insight .card {
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .slide-insight .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 168, 132, 0.1);
+      border-color: rgba(0, 168, 132, 0.3);
+    }
+
+    .slide-insight .card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-insight .card h3::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      background: var(--green);
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .slide-insight .card p {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin: 0;
+    }
+
+    .slide-insight .takeaway {
+      font-size: 32px;
+      line-height: 1.4;
+      color: var(--dim);
+      text-align: center;
+    }
+
+    .slide-insight .takeaway strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .slide-product {
+      padding-top: 8vh;
+    }
+
+    .slide-product .kicker {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .slide-product h2 {
+      font-size: clamp(56px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 6vh;
+    }
+
+    .slide-product .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 0;
+    }
+
+    .slide-product .card {
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 24px;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.03);
+    }
+
+    .slide-product .card-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .slide-product .card-label {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .slide-product .card h3 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .slide-product .chat-window {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+
+    .slide-product .msg {
+      font-size: 18px;
+      padding: 16px 20px;
+      max-width: 85%;
+      border-radius: 18px 18px 4px 18px;
+      line-height: 1.4;
+    }
+
+    .slide-product .msg.in {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      align-self: flex-start;
+      border-radius: 18px 18px 18px 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      color: var(--ink);
+    }
+
+    .slide-product .msg.out {
+      background: #e8f9f0;
+      align-self: flex-end;
+      color: var(--ink);
+      border: 1px solid rgba(0, 168, 132, 0.2);
+    }
+
+    .slide-product .demo-desc {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin: 0;
+    }
+
+    .slide-product ul {
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .slide-product ul li {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--dim);
+      padding-left: 28px;
+    }
+
+    .slide-product ul li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: rgba(0, 168, 132, 0.5);
+      border-radius: 50%;
+      top: 10px;
+      left: 4px;
+    }
+
+    .slide-product ul li strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .slide-product ul li span {
+      display: block;
+      color: var(--dim);
+    }
+
+    .slide-core {
+      padding-top: 8vh;
+    }
+
+    .slide-core .kicker {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .slide-core h2 {
+      font-size: clamp(56px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 6vh;
+    }
+
+    .slide-core .flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+    }
+
+    .slide-core .node {
+      flex: 1;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 32px 16px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+    }
+
+    .slide-core .arrow {
+      flex: 0 0 auto;
+      font-size: 24px;
+      color: var(--green);
+      font-weight: 700;
+      opacity: 0.4;
+    }
+
+    .slide-core .node .n {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .slide-core .node .t {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .slide-core .node .d {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--dim);
+    }
+
+    .slide-core .takeaway {
+      font-size: 28px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin-top: 6vh;
+      max-width: 950px;
+    }
+
+    .slide-core .takeaway strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .slide-core .takeaway span {
+      color: var(--green);
+    }
+
+
+    .slide-proof {
+      padding-top: 8vh;
+    }
+
+    .slide-proof .kicker {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .slide-proof h2 {
+      font-size: clamp(56px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .slide-proof .lead {
+      max-width: 800px;
+      font-size: 24px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin-bottom: 6vh;
+      margin-top: 0;
+    }
+
+    .slide-proof .system-flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+    }
+
+    .slide-proof .card {
+      flex: 1;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    /* Architectural 'wiring' down to the WebSocket bus */
+    .slide-proof .card::after {
+      content: "";
+      position: absolute;
+      bottom: -48px;
+      left: 50%;
+      width: 2px;
+      height: 48px;
+      background: var(--green);
+      opacity: 0.3;
+      transform: translateX(-50%);
+    }
+
+    .slide-proof .card-arrow {
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.15);
+      align-self: center;
+      font-weight: 700;
+    }
+
+    .slide-proof .card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-proof .card h3 svg {
+      width: 24px;
+      height: 24px;
+      color: var(--dim);
+      flex-shrink: 0;
+    }
+
+    .slide-proof .card p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin: 0;
+    }
+
+    .slide-proof .bus-container {
+      position: relative;
+      margin-top: 48px;
+      height: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-proof .bus-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .slide-proof .bus-label {
+      background: var(--bg);
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      z-index: 1;
+    }
+
+    .slide-proof .takeaway {
+      font-size: 32px;
+      line-height: 1.4;
+      margin-top: 6vh;
+      color: var(--dim);
+      text-align: center;
+    }
+
+    .slide-proof .takeaway strong {
+      color: var(--ink);
+    }
+
+    .slide-demo {
+      padding-top: 95px;
+    }
+
+    .slide-demo .kicker {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 8px;
+      margin-bottom: 18px;
+    }
+
+    .slide-demo h2 {
+      font-size: 80px;
+      font-weight: 700;
+      line-height: 0.9;
+      margin-bottom: 32px;
+    }
+
+    .slide-demo .system-flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 0;
+      position: relative;
+      z-index: 1;
+      width: calc(100% + 8vw);
+      margin-left: -4vw;
+      margin-right: -4vw;
+    }
+
+    .slide-demo .system-flow::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(0, 168, 132, 0.25);
+      z-index: -1;
+      transform: translateY(-50%);
+    }
+
+    .slide-demo .card {
+      flex: 1;
+      padding: 24px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 185px;
+    }
+
+    .slide-demo .card-arrow {
+      flex: 0 0 auto;
+      font-size: 32px;
+      color: var(--green);
+      font-weight: 600;
+      align-self: center;
+      padding: 0 6px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+    }
+
+    .slide-demo .card .n {
+      font-size: 22px;
+      letter-spacing: 0.15em;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .slide-demo .card .t {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 14px;
+      margin-top: 0;
+      line-height: 1.1;
+    }
+
+    .slide-demo .card .d {
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--dim);
+      font-weight: 400;
+      margin-top: 0;
+    }
+
+    .slide-demo .bus-container {
+      position: relative;
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .slide-demo .bus-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--green);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .slide-demo .bus-label {
+      display: inline-block;
+      background: var(--bg);
+      padding: 0 24px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+    }
+
+    .slide-demo .takeaway {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-top: 30px;
+      margin-bottom: 40px;
+      text-align: center;
+      color: var(--ink);
+    }
+
+    .slide-verticals {
+      padding-top: 4vh;
+    }
+
+    .slide-verticals .kicker {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 12px;
+    }
+
+    .slide-verticals h2 {
+      font-size: clamp(50px, 5.5vw, 72px);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .slide-verticals .matrix {
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-verticals .matrix-header {
+      display: grid;
+      grid-template-columns: 1.4fr 1.6fr 2.4fr 1fr;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .slide-verticals .matrix-header div {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--green);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .slide-verticals .matrix-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1.6fr 2.4fr 1fr;
+      align-items: center;
+      min-height: 56px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .slide-verticals .matrix-row:last-child {
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .slide-verticals .matrix-row.built {
+      background: rgba(0, 168, 132, 0.04);
+      border-bottom: 1px solid rgba(0, 168, 132, 0.1);
+    }
+
+    .slide-verticals .matrix-row div {
+      font-size: clamp(18px, 2.2vw, 24px);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .slide-verticals .matrix-row .b-name {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 12px;
+    }
+
+    .slide-verticals .matrix-header div:first-child {
+      padding-left: 12px;
+    }
+
+    .slide-verticals .badge {
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(0, 168, 132, 0.15);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .slide-verticals .arrow {
+      color: var(--green);
+      font-weight: bold;
+      margin: 0 6px;
+    }
+
+    .slide-verticals .takeaway {
+      font-size: clamp(24px, 2.5vw, 32px);
+      font-weight: 400;
+      line-height: 1.3;
+      margin-top: 24px;
+      color: var(--ink);
+    }
+
+    .slide-verticals .takeaway strong {
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .slide-arch {
+      padding-top: 3vh;
+      text-align: center;
+    }
+
+    .slide-arch .kicker {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 8px;
+    }
+
+    .slide-arch h2 {
+      font-size: clamp(48px, 5.5vw, 76px);
+      font-weight: 700;
+      line-height: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .slide-arch .diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .slide-arch .box {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .slide-arch .box-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .slide-arch .box-sub {
+      font-size: 18px;
+      color: var(--dim);
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
+    .slide-arch .whatsapp-box {
+      width: 300px;
+      height: 100px;
+    }
+
+    .slide-arch .engine-box {
+      width: 520px;
+      height: 140px;
+      border: 2px solid var(--green);
+      background: rgba(0, 168, 132, 0.04);
+      z-index: 2;
+    }
+
+    .slide-arch .engine-box .box-title {
+      font-size: 32px;
+      color: var(--green);
+    }
+
+    .slide-arch .engine-box .box-sub {
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .slide-arch .db-box {
+      width: 300px;
+      height: 100px;
+    }
+
+    .slide-arch .bus-box {
+      width: 260px;
+      height: 100px;
+    }
+
+    .slide-arch .client-box {
+      width: 250px;
+      height: 100px;
+    }
+
+    .slide-arch .conn-v {
+      width: 2px;
+      background-color: var(--green);
+      position: relative;
+    }
+
+    .slide-arch .conn-arrow::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--green);
+      z-index: 3;
+    }
+
+    .slide-arch .arch-footer {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.4;
+      color: var(--dim);
+      max-width: 1048px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .slide-arch .arch-footer strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .slide-onb {
+      padding-top: 6vh;
+      text-align: center;
+    }
+
+    .slide-onb .kicker {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 12px;
+    }
+
+    .slide-onb h2 {
+      font-size: clamp(46px, 5vw, 66px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0 auto 32px auto;
+      max-width: 90%;
+    }
+
+    .slide-onb .config-layer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 0 auto;
+      max-width: 1060px;
+    }
+
+    .slide-onb .onb-card {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      padding: 20px 24px;
+      text-align: left;
+      box-shadow: none;
+      min-height: 220px;
+    }
+
+    .slide-onb .onb-card .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .slide-onb .onb-card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 12px;
+      margin-top: 0;
+    }
+
+    .slide-onb .onb-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .slide-onb .onb-card li {
+      font-size: 18px;
+      color: var(--dim);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .slide-onb .onb-card li::before {
+      content: "•";
+      color: var(--green);
+      margin-right: 8px;
+      font-weight: bold;
+    }
+
+    .slide-onb .bottom-panels {
+      display: flex;
+      margin: 40px auto 0 auto;
+      max-width: 1060px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .slide-onb .panel {
+      flex: 1;
+      padding: 30px 40px;
+      text-align: left;
+    }
+
+    .slide-onb .panel-left {
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .slide-onb .panel-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    .slide-onb .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .slide-onb .check-grid div {
+      font-size: 20px;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .slide-onb .check {
+      color: var(--green);
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .slide-onb .panel-hero {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 20px;
+      line-height: 1;
+    }
+
+    .slide-onb .panel-process {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 16px;
+      font-size: 18px;
+      color: var(--dim);
+    }
+
+    .slide-onb .panel-process div {
+      white-space: nowrap;
+    }
+
+    .slide-onb .panel-process strong {
+      color: var(--ink);
+      margin-right: 4px;
+    }
+
+    .slide-status {
+      padding-top: 6vh;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slide-status .kicker {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .slide-status h2 {
+      font-size: clamp(50px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1;
+      margin: 0 auto 50px auto;
+      max-width: 90%;
+    }
+
+    .slide-status .dashboard {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 1120px;
+    }
+
+    .slide-status .status-card {
+      flex: 1;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      box-shadow: none;
+    }
+
+    .slide-status .status-card.live {
+      background: rgba(0, 168, 132, 0.05);
+      border-color: rgba(0, 168, 132, 0.15);
+    }
+
+    .slide-status .status-card.demo {
+      background: rgba(245, 166, 35, 0.06);
+      border-color: rgba(245, 166, 35, 0.2);
+    }
+
+    .slide-status .status-card.next {
+      background: rgba(74, 144, 226, 0.05);
+      border-color: rgba(74, 144, 226, 0.15);
+    }
+
+    .slide-status .card-header {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .slide-status .status-card.live .card-header {
+      color: #008766;
+    }
+
+    .slide-status .status-card.demo .card-header {
+      color: #c07a00;
+    }
+
+    .slide-status .status-card.next .card-header {
+      color: #2d6da3;
+    }
+
+    .slide-status .icon-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-right: 14px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .slide-status .status-card.live .icon-circle {
+      background: #00a884;
+    }
+
+    .slide-status .status-card.demo .icon-circle {
+      background: #f5a623;
+    }
+
+    .slide-status .status-card.next .icon-circle {
+      background: #4a90e2;
+    }
+
+    .slide-status .status-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .slide-status .status-list li {
+      font-size: 24px;
+      color: var(--ink);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      line-height: 1.3;
+    }
+
+    .slide-status .status-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .slide-status .bullet-icon {
+      margin-right: 14px;
+      font-weight: bold;
+      width: 24px;
+      flex-shrink: 0;
+      text-align: left;
+    }
+
+    .slide-status .status-card.live .bullet-icon {
+      color: #00a884;
+    }
+
+    .slide-status .status-card.demo .bullet-icon {
+      color: #f5a623;
+    }
+
+    .slide-status .status-card.next .bullet-icon {
+      color: #4a90e2;
+      font-size: 28px;
+      line-height: 24px;
+    }
+
+    .slide-status .conclusion-box {
+      margin-top: 60px;
+      border-top: 2px solid rgba(0, 0, 0, 0.1);
+      padding-top: 40px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .slide-status .conclusion {
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .slide-status .conclusion strong {
+      font-weight: 700;
+    }
+
+    .slide-wins {
+      padding-top: 6vh;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slide-wins .kicker {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .slide-wins h2 {
+      font-size: clamp(50px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1;
+      margin: 0 auto 40px auto;
+      max-width: 90%;
+    }
+
+    .slide-wins .theme-columns {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 1140px;
+    }
+
+    .slide-wins .theme-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .slide-wins .theme-header {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: left;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 8px;
+    }
+
+    .slide-wins .win-card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      box-shadow: none;
+    }
+
+    .slide-wins .win-card.hero {
+      border: 1px solid rgba(0, 168, 132, 0.4);
+      background: rgba(0, 168, 132, 0.04);
+    }
+
+    .slide-wins .win-card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .slide-wins .win-card.hero h3 {
+      color: var(--green);
+    }
+
+    .slide-wins .win-card .icon {
+      margin-right: 12px;
+      font-size: 28px;
+    }
+
+    .slide-wins .win-line {
+      font-size: 22px;
+      color: var(--dim);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .slide-wins .win-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .slide-wins .conclusion {
+      margin-top: 50px;
+      font-size: 34px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .slide-wins .conclusion strong {
+      font-weight: 700;
+    }
+
+    .slide-built {
+      padding-top: 3vh;
+      text-align: center;
+    }
+
+    .slide-built .kicker {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .slide-built h2 {
+      font-size: clamp(46px, 6vw, 68px);
+      font-weight: 700;
+      line-height: 1;
+      margin: 0 auto 24px auto;
+    }
+
+    .slide-built .metrics-columns {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    .slide-built .metric-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .slide-built .col-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .slide-built .m-card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      box-shadow: none;
+    }
+
+    .slide-built .m-card.hero {
+      border: 2px solid rgba(0, 168, 132, 0.3);
+      background: rgba(0, 168, 132, 0.02);
+      padding: 20px 24px;
+    }
+
+    .slide-built .m-icon {
+      font-size: 28px;
+      margin-right: 12px;
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    .slide-built .m-card.hero .m-icon {
+      font-size: 32px;
+      margin-top: 8px;
+    }
+
+    .slide-built .m-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-built .m-num {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .slide-built .m-card.hero .m-num {
+      font-size: 64px;
+      margin-bottom: 8px;
+      color: var(--green);
+    }
+
+    .slide-built .m-label {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dim);
+    }
+
+    .slide-built .m-card.hero .m-label {
+      font-size: 22px;
+      color: var(--ink);
+    }
+
+    .slide-built .m-sub {
+      font-size: 16px;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    .slide-built .roadmap-block {
+      margin: 30px auto 20px auto;
+      max-width: 1040px;
+    }
+
+    .slide-built .roadmap-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .slide-built .roadmap-path {
+      font-size: 22px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .slide-built .roadmap-path .done {
+      color: #fff;
+      font-weight: 700;
+      background: var(--green);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    .slide-built .roadmap-path .arrow {
+      color: rgba(0, 0, 0, 0.2);
+      font-weight: 300;
+    }
+
+    .slide-built .conclusion {
+      font-size: 30px;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .slide-built .conclusion strong {
+      font-weight: 700;
+    }
+
+    .slide-close {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 0;
+    }
+
+    .slide-close .close-left {
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slide-close .kicker {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .slide-close h1 {
+      font-size: clamp(60px, 7.5vw, 90px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-top: 0;
+      margin-bottom: 32px;
+    }
+
+    .slide-close .lead-text {
+      font-size: 28px;
+      line-height: 1.5;
+      color: var(--dim);
+      margin-bottom: 0;
+    }
+
+    .slide-close .divider {
+      height: 4px;
+      width: 64px;
+      background: var(--green);
+      margin: 48px auto;
+      border-radius: 2px;
+    }
+
+    .slide-close .closing-lines {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .slide-close .questions {
+      font-size: 36px;
+      color: var(--dim);
+    }
+
+    .grid {
+      display: grid;
+      gap: 2vh 1.6vw;
+      margin-top: 1vh
+    }
+
+    .g2 {
+      grid-template-columns: repeat(2, 1fr)
+    }
+
+    .g3 {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    .g4 {
+      grid-template-columns: repeat(4, 1fr)
+    }
+
+    .card {
+      background: #fafafa;
+      border: 1px solid #eaeaea;
+      border-radius: 14px;
+      padding: 2.2vh 1.5vw;
+    }
+
+    .card.accent {
+      border-color: var(--green-dk)
+    }
+
+    .card.ghost {
+      background: none;
+      border-style: dashed
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4vh
+    }
+
+    ul li {
+      padding-left: 1.5em;
+      position: relative
+    }
+
+    ul li::before {
+      content: "▸";
+      color: var(--green);
+      position: absolute;
+      left: 0;
+      font-size: .95em
+    }
+
+    .stat {
+      font-size: clamp(28px, 4.2vw, 60px);
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.02em
+    }
+
+    .stat-l {
+      display: block;
+      margin-top: .7vh;
+      font-size: clamp(11px, 1.15vw, 16px);
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: .1em
+    }
+
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: .5vw;
+      margin-top: 2vh;
+      flex-wrap: wrap
+    }
+
+    .node {
+      flex: 1 1 0;
+      min-width: 112px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.8vh .9vw;
+      text-align: center
+    }
+
+    .node.accent {
+      border-color: var(--green-dk)
+    }
+
+    .node .n {
+      font-size: clamp(10px, .95vw, 13px);
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: .1em
+    }
+
+    .node .t {
+      font-size: clamp(12px, 1.3vw, 19px);
+      color: var(--ink);
+      font-weight: 600;
+      margin-top: .5vh
+    }
+
+    .node .d {
+      font-size: clamp(10px, 1vw, 14px);
+      color: var(--dim);
+      margin-top: .4vh
+    }
+
+    .arrow {
+      display: flex;
+      align-items: center;
+      color: var(--green);
+      font-size: clamp(13px, 1.5vw, 22px)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5vh
+    }
+
+    th {
+      text-align: left;
+      color: var(--green);
+      font-size: clamp(11px, 1.05vw, 15px);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 1.1vh .8vw;
+      border-bottom: 1px solid var(--line)
+    }
+
+    td {
+      padding: 1.25vh .8vw;
+      border-bottom: 1px solid var(--line);
+      font-size: clamp(12px, 1.25vw, 18px)
+    }
+
+    tr td:first-child {
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    tr.built td {
+      background: rgba(0, 168, 132, .1)
+    }
+
+    code,
+    .mono {
+      font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace
+    }
+
+    .msg {
+      background: #d9fdd3;
+      color: #111b21;
+      border-radius: 12px 12px 2px 12px;
+      padding: 1.2vh 1vw;
+      font-size: clamp(12px, 1.3vw, 19px);
+      max-width: 40ch;
+      margin-bottom: 1.1vh
+    }
+
+    .msg.in {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px 12px 12px 2px
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: clamp(10px, .9vw, 13px);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .35em .8em;
+      border-radius: 6px
+    }
+
+    .tag.ok {
+      background: rgba(0, 168, 132, .14);
+      color: var(--green)
+    }
+
+    .tag.sim {
+      background: rgba(227, 137, 0, .14);
+      color: var(--amber)
+    }
+
+    .tag.next {
+      background: rgba(2, 126, 181, .14);
+      color: var(--blue)
+    }
+
+    .bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--green);
+      transition: width .25s ease;
+      z-index: 9
+    }
+
+    .count {
+      position: fixed;
+      bottom: 30px;
+      right: 40px;
+      color: var(--ink);
+      opacity: 0.6;
+      font-size: 16px;
+      letter-spacing: .1em;
+      z-index: 9
+    }
+
+    .brand {
+      position: fixed;
+      bottom: 30px;
+      left: 40px;
+      color: var(--ink);
+      opacity: 0.6;
+      font-size: 16px;
+      letter-spacing: .1em;
+      z-index: 9
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--ink);
+      opacity: 0.6;
+      font-size: 16px;
+      letter-spacing: .08em;
+      z-index: 9
+    }
+
+    @media (max-width:760px) {
+
+      .g4,
+      .g3,
+      .g2 {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bar" id="bar"></div>
+
+  <!-- 1 · TITLE -->
+  <section class="slide slide-title">
+    <div class="title-left">
+      <div class="kicker">WBOS • WhatsApp Business Operating System</div>
+
+      <h1>
+        <span class="light">Every business needs software.</span><br>
+        Nobody needs another app.
+      </h1>
+
+      <div class="subtitle">
+        <div class="strong">A CRM and operations engine inside WhatsApp.</div>
+        <div>No website.</div>
+        <div>No app.</div>
+        <div>No server bill.</div>
+        <div class="demo-ready">Live demo ready.</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="team">
+        Built by<br>
+        <strong>Rishvin Reddy • Sparsh Jhunjhunwala • Lakshya Bamboli</strong>
+      </div>
+
+      <div class="proof-strip">
+        <span>APIs</span>
+        <span>Dashboard</span>
+        <span>Realtime</span>
+        <span>Zero Apps</span>
+      </div>
+    </div>
+
+    <div class="title-right">
+      <div class="diagram-block">
+        <div class="diag-app">WhatsApp</div>
+        <div class="diag-arrow">↓</div>
+        <div class="diag-engine">Conversation Engine</div>
+        <div class="diag-branch-arrows">
+          <span>↙</span>
+          <span>↓</span>
+          <span>↓</span>
+          <span>↘</span>
+        </div>
+        <div class="diag-targets">
+          <div class="diag-target">Owner</div>
+          <div class="diag-target">Staff</div>
+          <div class="diag-target">Dispatch</div>
+          <div class="diag-target">Customer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · PROBLEM -->
+  <section class="slide slide-problem">
+    <div class="kicker">The problem</div>
+
+    <h2>
+      <span class="light">Small businesses get</span><br>
+      sold the wrong thing.
+    </h2>
+
+    <div class="grid g2">
+      <div class="card card-wrong">
+        <div class="card-header">
+          <div class="card-label">Expectation</div>
+          <h3>What they're told to buy</h3>
+        </div>
+        <ul>
+          <li>A custom website — ₹30k–₹1L, then hosting forever</li>
+          <li>A mobile app nobody downloads for one shop</li>
+          <li>Infrastructure that falls over the one day traffic spikes</li>
+          <li>A dashboard they need training to operate</li>
+        </ul>
+      </div>
+
+      <div class="card card-reality">
+        <div class="card-header">
+          <div class="card-label">Reality</div>
+          <h3>What actually happens</h3>
+        </div>
+        <ul>
+          <li>The site goes stale in three months</li>
+          <li>Customers call or WhatsApp anyway</li>
+          <li>Orders live in chat scroll and memory</li>
+          <li>Zero record, zero analytics, zero follow-up</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      The software isn't the hard part.<br>
+      <strong><span>Getting a customer to use it is.</span></strong>
+    </div>
+  </section>
+
+  <!-- 3 · INSIGHT -->
+  <section class="slide slide-insight">
+    <div class="kicker">The insight</div>
+    <h2>
+      <span class="light">Stop building destinations.</span><br>
+      Go where the customers already are.
+    </h2>
+    <div class="grid g3">
+      <div class="card">
+        <h3>Already installed</h3>
+        <p>WhatsApp is on effectively every phone your customer owns. Install rate: 100%. Learning curve: none.</p>
+      </div>
+      <div class="card">
+        <h3>Already open</h3>
+        <p>They check it dozens of times a day. You don't need to earn a visit — you're already in the list.</p>
+      </div>
+      <div class="card">
+        <h3>Already trusted</h3>
+        <p>No signup, no password, no payment page anxiety. It's a chat with a shop they know.</p>
+      </div>
+    </div>
+    <div class="takeaway">
+      So we put the CRM <strong><span style="color:var(--green)">behind</span></strong> the chat<br>
+      instead of building a storefront <strong><span style="color:var(--green)">beside</span></strong> it.
+    </div>
+  </section>
+
+  <!-- 4 · WHAT WE BUILT -->
+  <section class="slide slide-product">
+    <div class="kicker">What we built</div>
+    <h2>Not an app. An engine.</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-label">Interface</div>
+          <h3>Customer side</h3>
+        </div>
+        <div class="chat-window">
+          <div class="msg in">2 kg rice, 3 milk packets, 1 oil</div>
+          <div class="msg out">🧾 Order #14 · ₹586<br>Packing started · track: /track/14</div>
+        </div>
+        <p class="demo-desc">Plain text. No menus to learn, no link to click, no account to make.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-label">System</div>
+          <h3>Business side</h3>
+        </div>
+        <ul>
+          <li><strong>CRM Inbox</strong><span>Every customer, every message, searchable, with one-tap human
+              takeover.</span></li>
+          <li><strong>Job Board</strong><span>Live pipeline, no refresh.</span></li>
+          <li><strong>Floor Terminal</strong><span>Checklist for whoever fulfils it.</span></li>
+          <li><strong>Dispatch</strong><span>Customer tracking link.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · THE PRIMITIVE -->
+  <section class="slide slide-core">
+    <div class="kicker">The core bet</div>
+    <h2>Every business is the same five steps.</h2>
+    <div class="flow">
+      <div class="node">
+        <div class="n">01</div>
+        <div class="t">Conversation</div>
+        <div class="d">Customer states what they want</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n">02</div>
+        <div class="t">Catalogue</div>
+        <div class="d">Match it to what you sell</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n">03</div>
+        <div class="t">Job</div>
+        <div class="d">Priced, confirmed, recorded</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n">04</div>
+        <div class="t">Pipeline</div>
+        <div class="d">Staff move it through stages</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n">05</div>
+        <div class="t">Proof</div>
+        <div class="d">Delivered, notified, logged</div>
+      </div>
+    </div>
+    <p class="takeaway">A grocery order, a pharmacy refill, a restaurant ticket, a laundry pickup,<br>or a repair
+      job—all follow an <strong><span style="color:var(--green)">IDENTICAL SHAPE</span></strong>.<br>Build the engine
+      once and configure the vocabulary for each business.</p>
+  </section>
+
+  <!-- 6 · THE PROOF -->
+  <section class="slide slide-proof">
+    <div class="kicker">Proof of the engine</div>
+    <h2>We shipped one vertical end to end.</h2>
+    <p class="lead">Grocery retail was chosen because it's operationally the hardest.<br>If the engine works here,
+      simpler industries become configuration problems.</p>
+
+    <div class="system-flow">
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg> Chat bot</h3>
+        <p>Onboarding, catalogue, order capture, status pushes</p>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg> OS console</h3>
+        <p>Live board + CRM inbox + human takeover</p>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+          </svg> Floor terminal</h3>
+        <p>Fulfilment checklist, stock control</p>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg> Dispatch</h3>
+        <p>Assignment, acceptance, live map for the customer</p>
+      </div>
+    </div>
+
+    <div class="bus-container">
+      <div class="bus-line"></div>
+      <div class="bus-label">Shared WebSocket Bus</div>
+    </div>
+
+    <p class="takeaway">All four sync over <strong><span style="color:var(--green)">one WebSocket
+          bus</span></strong>.<br>No polling. No refresh button.</p>
+  </section>
+
+  <!-- 7 · DEMO -->
+  <section class="slide slide-demo">
+    <div class="kicker">Live demo · what you'll see</div>
+    <h2>Chat to doorstep in six moves.</h2>
+    <div class="system-flow">
+      <div class="card">
+        <div class="n">01</div>
+        <div class="t">Customer</div>
+        <div class="d">Menu shown<br>List sent</div>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <div class="n">02</div>
+        <div class="t">Parse</div>
+        <div class="d">Catalogue matched<br>Invoice returned</div>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <div class="n">03</div>
+        <div class="t">Accept</div>
+        <div class="d">Job created<br>Invoice sent</div>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <div class="n">04</div>
+        <div class="t">Fulfill</div>
+        <div class="d">Checklist complete<br>Stock updated</div>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <div class="n">05</div>
+        <div class="t">Dispatch</div>
+        <div class="d">Assigned<br>Tracking shared</div>
+      </div>
+      <div class="card-arrow">→</div>
+      <div class="card">
+        <div class="n">06</div>
+        <div class="t">Closed</div>
+        <div class="d">Receipt sent<br>Revenue booked</div>
+      </div>
+    </div>
+
+    <div class="bus-container">
+      <div class="bus-line"></div>
+      <div class="bus-label">LIVE API CALLS • LIVE WEBSOCKET EVENTS</div>
+    </div>
+
+    <p class="takeaway">Nothing in this demo is a <strong><span style="color:var(--green)">click-through
+          mockup</span></strong>.</p>
+  </section>
+
+  <!-- 8 · VERTICALS -->
+  <section class="slide slide-verticals">
+    <div class="kicker">Same engine, different business</div>
+    <h2>Change the vocabulary, not the code.</h2>
+
+    <div class="matrix">
+      <div class="matrix-header">
+        <div>Business</div>
+        <div>Catalogue</div>
+        <div>Pipeline</div>
+        <div>Closes</div>
+      </div>
+      <div class="matrix-row built">
+        <div class="b-name">Grocery <span class="badge">Built</span></div>
+        <div>Stock Keeping Unit</div>
+        <div>Pack <span class="arrow">→</span> Ready</div>
+        <div>Rider</div>
+      </div>
+      <div class="matrix-row">
+        <div class="b-name">Pharmacy</div>
+        <div>Medicines + Rx</div>
+        <div>Verify <span class="arrow">→</span> Pack</div>
+        <div>Rider</div>
+      </div>
+      <div class="matrix-row">
+        <div class="b-name">Restaurant</div>
+        <div>Menu</div>
+        <div>Kitchen <span class="arrow">→</span> Ready</div>
+        <div>Pickup</div>
+      </div>
+      <div class="matrix-row">
+        <div class="b-name">Laundry</div>
+        <div>Services</div>
+        <div>Wash <span class="arrow">→</span> Ready</div>
+        <div>Return</div>
+      </div>
+      <div class="matrix-row">
+        <div class="b-name">Hardware</div>
+        <div>Products</div>
+        <div>Quote <span class="arrow">→</span> Approve</div>
+        <div>Counter</div>
+      </div>
+      <div class="matrix-row">
+        <div class="b-name">Salon</div>
+        <div>Services</div>
+        <div>Confirm <span class="arrow">→</span> Visit</div>
+        <div>Walk-in</div>
+      </div>
+    </div>
+
+    <p class="takeaway">Five of six industries require <br><strong>ZERO NEW PRIMITIVES.</strong><br>Only vocabulary
+      changes.</p>
+  </section>
+
+  <!-- 9 · ARCHITECTURE -->
+  <section class="slide slide-arch">
+    <div class="kicker">Architecture</div>
+    <h2>One service. One event bus. Four role surfaces.</h2>
+
+    <div class="diagram">
+      <div class="box whatsapp-box">
+        <div class="box-title">WhatsApp</div>
+        <div class="box-sub">Meta Cloud Webhook</div>
+      </div>
+
+      <div class="conn-v conn-arrow" style="height: 24px;"></div>
+
+      <div class="box engine-box">
+        <div class="box-title">Conversation Engine</div>
+        <div class="box-sub">State Machine • Catalogue • Jobs</div>
+      </div>
+
+      <div class="middle-row" style="display: flex; gap: 40px;">
+        <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+          <div class="box db-box">
+            <div class="box-title">Database</div>
+          </div>
+        </div>
+        <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+          <div class="box bus-box">
+            <div class="box-title">WebSocket Bus</div>
+          </div>
+          <div class="conn-v" style="height: 24px;"></div>
+        </div>
+      </div>
+
+      <div style="position: relative; width: 1048px; height: 2px; display: flex; justify-content: center;">
+        <div class="conn-h" style="width: 798px; height: 2px; background: var(--green);"></div>
+      </div>
+
+      <div class="conn-drops" style="display: flex; width: 1048px; justify-content: space-between;">
+        <div class="col" style="width: 250px; display: flex; justify-content: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+        </div>
+        <div class="col" style="width: 250px; display: flex; justify-content: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+        </div>
+        <div class="col" style="width: 250px; display: flex; justify-content: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+        </div>
+        <div class="col" style="width: 250px; display: flex; justify-content: center;">
+          <div class="conn-v conn-arrow" style="height: 24px;"></div>
+        </div>
+      </div>
+
+      <div class="clients-row" style="display: flex; gap: 16px;">
+        <div class="box client-box">
+          <div class="box-title">Owner</div>
+          <div class="box-sub">Console</div>
+        </div>
+        <div class="box client-box">
+          <div class="box-title">Staff</div>
+          <div class="box-sub">Terminal</div>
+        </div>
+        <div class="box client-box">
+          <div class="box-title">Dispatch</div>
+          <div class="box-sub">Portal</div>
+        </div>
+        <div class="box client-box">
+          <div class="box-title">Customer</div>
+          <div class="box-sub">Tracker</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arch-footer">
+      <div class="arch-line">FastAPI • SQLAlchemy • MySQL • WebSockets</div>
+      <div class="arch-line"><strong>Runs on one laptop. No proprietary services.</strong></div>
+    </div>
+  </section>
+
+  <!-- 10 · WHAT'S CONFIGURABLE -->
+  <section class="slide slide-onb">
+    <div class="kicker">How a new business gets onboarded</div>
+    <h2>The engine never changes.<br>Four things do.</h2>
+
+    <div class="config-layer">
+      <div class="onb-card">
+        <div class="icon">📦</div>
+        <h3>① Catalogue</h3>
+        <ul>
+          <li>Products</li>
+          <li>Pricing</li>
+          <li>Units</li>
+          <li>Stock</li>
+        </ul>
+      </div>
+      <div class="onb-card">
+        <div class="icon">🔀</div>
+        <h3>② Pipeline</h3>
+        <ul>
+          <li>Rename stages</li>
+          <li>Reorder flow</li>
+        </ul>
+      </div>
+      <div class="onb-card">
+        <div class="icon">💬</div>
+        <h3>③ Messages</h3>
+        <ul>
+          <li>Greetings</li>
+          <li>Templates</li>
+          <li>Status updates</li>
+        </ul>
+      </div>
+      <div class="onb-card">
+        <div class="icon">👥</div>
+        <h3>④ Roles</h3>
+        <ul>
+          <li>Rename roles</li>
+          <li>Chef</li>
+          <li>Technician</li>
+          <li>Pharmacist</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-panels">
+      <div class="panel panel-left">
+        <div class="panel-header">NEVER CHANGES</div>
+        <div class="check-grid">
+          <div><span class="check">✓</span> Webhooks</div>
+          <div><span class="check">✓</span> Engine</div>
+          <div><span class="check">✓</span> CRM</div>
+          <div><span class="check">✓</span> Human Takeover</div>
+          <div><span class="check">✓</span> Tracking</div>
+          <div><span class="check">✓</span> WebSockets</div>
+        </div>
+      </div>
+      <div class="panel panel-right">
+        <div class="panel-header">TARGET ONBOARDING</div>
+        <div class="panel-hero">1 WORKING DAY</div>
+        <div class="panel-process">
+          <div><strong>1.</strong> Connect WhatsApp</div>
+          <div><strong>2.</strong> Import Catalogue</div>
+          <div><strong>3.</strong> Configure Messages</div>
+          <div><strong>4.</strong> Train Staff</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · HONESTY -->
+  <section class="slide slide-status">
+    <div class="kicker">Straight answers</div>
+    <h2>Where we actually are.</h2>
+
+    <div class="dashboard">
+      <div class="status-card live">
+        <div class="card-header"><span class="icon-circle"></span> LIVE TODAY</div>
+        <ul class="status-list">
+          <li><span class="bullet-icon">✓</span> Webhooks</li>
+          <li><span class="bullet-icon">✓</span> CRM</li>
+          <li><span class="bullet-icon">✓</span> State Machine</li>
+          <li><span class="bullet-icon">✓</span> Realtime Sync</li>
+          <li><span class="bullet-icon">✓</span> Grocery Complete</li>
+        </ul>
+      </div>
+
+      <div class="status-card demo">
+        <div class="card-header"><span class="icon-circle"></span> DEMO SHORTCUTS</div>
+        <ul class="status-list">
+          <li><span class="bullet-icon">△</span> GPS simulated</li>
+          <li><span class="bullet-icon">△</span> Cash / UPI</li>
+          <li><span class="bullet-icon">△</span> Analytics seeded</li>
+        </ul>
+      </div>
+
+      <div class="status-card next">
+        <div class="card-header"><span class="icon-circle"></span> NEXT BUILD</div>
+        <ul class="status-list">
+          <li><span class="bullet-icon">→</span> Multi-tenant</li>
+          <li><span class="bullet-icon">→</span> Config extraction</li>
+          <li><span class="bullet-icon">→</span> Remove hardcoding</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="conclusion-box">
+      <p class="conclusion">Everything shown today <br><strong>is production architecture.</strong><br>Only
+        configuration remains.</p>
+    </div>
+  </section>
+
+  <!-- 12 · WHY IT WINS -->
+  <section class="slide slide-wins">
+    <div class="kicker">Why this wins</div>
+    <h2>Distribution beats features.</h2>
+
+    <div class="theme-columns">
+
+      <!-- COLUMN 1: CUSTOMER EXPERIENCE -->
+      <div class="theme-col">
+        <div class="theme-header">Customer Experience</div>
+
+        <div class="win-card hero">
+          <h3><span class="icon">📱</span> Zero Install</h3>
+          <div class="win-line">Customer uses WhatsApp</div>
+          <div class="win-line">Owner uses a browser</div>
+          <div class="win-line">Nothing to install</div>
+        </div>
+
+        <div class="win-card hero">
+          <h3><span class="icon">⚡</span> No Traffic</h3>
+          <div class="win-line">Chat queues</div>
+          <div class="win-line">No homepage spikes</div>
+          <div class="win-line">No crashed sites</div>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: OPERATIONS -->
+      <div class="theme-col">
+        <div class="theme-header">Operations</div>
+
+        <div class="win-card hero">
+          <h3><span class="icon">💻</span> One Laptop</h3>
+          <div class="win-line">Single process</div>
+          <div class="win-line">Low infrastructure cost</div>
+          <div class="win-line">Affordable for SMEs</div>
+        </div>
+
+        <div class="win-card">
+          <h3><span class="icon">📝</span> Audit Trail</h3>
+          <div class="win-line">Every message logged</div>
+          <div class="win-line">Every status tracked</div>
+          <div class="win-line">Database-backed</div>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: PLATFORM -->
+      <div class="theme-col">
+        <div class="theme-header">Platform</div>
+
+        <div class="win-card">
+          <h3><span class="icon">♻️</span> One Engine</h3>
+          <div class="win-line">Shared engine</div>
+          <div class="win-line">Industry-specific config</div>
+          <div class="win-line">No rewrites</div>
+        </div>
+
+        <div class="win-card">
+          <h3><span class="icon">🛡️</span> Graceful</h3>
+          <div class="win-line">Offline simulator</div>
+          <div class="win-line">No credentials required</div>
+          <div class="win-line">Reliable demos</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="conclusion">Every advantage comes from the architecture,<br><strong>not feature count.</strong></p>
+  </section>
+
+  <!-- 13 · BUILT -->
+  <section class="slide slide-built">
+    <div class="kicker">Built, not slideware</div>
+    <h2>What's actually running.</h2>
+
+    <div class="metrics-columns">
+
+      <!-- Platform -->
+      <div class="metric-col">
+        <div class="col-header">Platform</div>
+        <div class="m-card hero">
+          <div class="m-icon">🌐</div>
+          <div class="m-content">
+            <div class="m-label">REST APIs</div>
+            <div class="m-sub">Public + Internal endpoints</div>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-icon">⚡</div>
+          <div class="m-content">
+            <div class="m-num">1</div>
+            <div class="m-label">Realtime Event Bus</div>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-icon">🗄</div>
+          <div class="m-content">
+            <div class="m-num">7</div>
+            <div class="m-label">Core Tables</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product -->
+      <div class="metric-col">
+        <div class="col-header">Product</div>
+        <div class="m-card hero">
+          <div class="m-icon">🖥</div>
+          <div class="m-content">
+            <div class="m-num">4</div>
+            <div class="m-label">Live Interfaces</div>
+            <div class="m-sub">Role-based dashboards</div>
+          </div>
+        </div>
+        <div class="m-card hero">
+          <div class="m-icon">📦</div>
+          <div class="m-content">
+            <div class="m-num">0</div>
+            <div class="m-label">Apps to Install</div>
+            <div class="m-sub">Browser & WhatsApp only</div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="roadmap-block">
+      <div class="roadmap-title">NEXT 90 DAYS</div>
+      <div class="roadmap-path">
+        <span class="done">✓ Configuration Layer</span>
+        <span class="arrow">→</span>
+        <span>Multi-Tenant</span>
+        <span class="arrow">→</span>
+        <span>Payments</span>
+        <span class="arrow">→</span>
+        <span>Live GPS</span>
+        <span class="arrow">→</span>
+        <span>Analytics</span>
+      </div>
+    </div>
+
+    <div class="conclusion">
+      The architecture is running.<br>
+      The next 90 days are configuration, <strong>not reinvention.</strong>
+    </div>
+  </section>
+
+  <!-- 14 · CLOSE -->
+  <section class="slide slide-close">
+    <div class="close-left">
+      <div class="kicker">Thank you</div>
+      <h1>Software where<br>the customer<br>already is.</h1>
+
+      <div class="lead-text">
+        Live demo ready.<br>
+        Message the WhatsApp number.<br>
+        Watch four dashboards react.<br>
+        Tell us your business.<br>
+        We'll show you exactly<br>
+        what changes—and what doesn't.
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="closing-lines">
+        One engine.<br>
+        Many businesses.<br>
+        Zero rewrites.
+      </div>
+
+      <div class="questions">Questions?</div>
+    </div>
+  </section>
+
+  <div class="brand">WBOS • WHATSAPP BUSINESS CRM</div>
+  <div class="count" id="count"></div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let i = 0;
+
+    function show(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, k) => s.classList.toggle('on', k === i));
+      document.getElementById('count').textContent =
+        String(i + 1).padStart(2, '0') + ' / ' + slides.length;
+      document.getElementById('bar').style.width = ((i + 1) / slides.length * 100) + '%';
+      location.hash = i + 1;
+    }
+
+    addEventListener('keydown', e => {
+      if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); show(i + 1); }
+      else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+      else if (e.key === 'Home') show(0);
+      else if (e.key === 'End') show(slides.length - 1);
+      else if (e.key === 'f' || e.key === 'F') {
+        document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+      }
+    });
+    // tap right half = next, left half = previous (for presenting off a phone/tablet)
+    addEventListener('click', e => show(e.clientX > innerWidth / 2 ? i + 1 : i - 1));
+
+    show(parseInt(location.hash.slice(1)) - 1 || 0);
+  </script>
+</body>
+
+</html>
