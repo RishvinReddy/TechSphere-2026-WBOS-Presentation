@@ -557,3 +557,844 @@ Each module communicates through well-defined APIs, ensuring loose coupling and 
 The architecture of WBOS is designed around modularity, scalability, and maintainability. By separating responsibilities into distinct layers and independent modules, the platform can evolve without disrupting existing functionality. The API-first and AI-first approach ensures that future integrations—such as additional communication channels, advanced analytics, or new AI capabilities—can be incorporated with minimal architectural changes.
 
 In the next section, **Part 2**, we will examine the internal data flow, backend services, API design, and database architecture in detail.
+
+---
+
+# System Architecture – Part 2
+
+# Data Flow, Backend Services, API Layer & Database Architecture
+
+This section explains how information travels through WBOS, how backend services interact with one another, how APIs are structured, and how data is stored, processed, and retrieved throughout the platform.
+
+The architecture follows an event-driven, service-oriented approach that minimizes coupling between components while maximizing scalability and maintainability.
+
+---
+
+# Complete System Data Flow
+
+The following diagram illustrates the end-to-end journey of a customer interaction.
+
+```mermaid
+flowchart LR
+
+Customer --> WhatsApp
+
+WhatsApp --> Webhook
+
+Webhook --> API
+
+API --> Authentication
+
+Authentication --> BusinessLogic
+
+BusinessLogic --> Database
+
+BusinessLogic --> AI
+
+BusinessLogic --> Automation
+
+BusinessLogic --> Notifications
+
+Automation --> Database
+
+AI --> Database
+
+Database --> Analytics
+
+Analytics --> Dashboard
+
+Dashboard --> User
+```
+
+Every interaction inside WBOS follows this processing pipeline.
+
+---
+
+# Example Workflow
+
+Consider the following scenario.
+
+A customer sends a message asking:
+
+> "I would like to know the pricing."
+
+The system performs these steps:
+
+```
+Customer
+
+↓
+
+WhatsApp Business API
+
+↓
+
+Webhook receives message
+
+↓
+
+Authentication verifies webhook
+
+↓
+
+Message stored in database
+
+↓
+
+Conversation updated
+
+↓
+
+AI generates suggested response
+
+↓
+
+Sales representative notified
+
+↓
+
+Representative reviews suggestion
+
+↓
+
+Message sent
+
+↓
+
+Analytics updated
+
+↓
+
+Dashboard refreshed
+```
+
+No customer interaction bypasses the centralized processing layer.
+
+---
+
+# Backend Service Architecture
+
+The backend is organized into independent services.
+
+```mermaid
+flowchart TB
+
+Gateway[API Gateway]
+
+Auth[Authentication Service]
+
+Customer[Customer Service]
+
+Messaging[Messaging Service]
+
+Campaign[Campaign Service]
+
+AI[AI Service]
+
+Analytics[Analytics Service]
+
+Notification[Notification Service]
+
+Automation[Workflow Engine]
+
+Database[(PostgreSQL)]
+
+Gateway --> Auth
+
+Gateway --> Customer
+
+Gateway --> Messaging
+
+Gateway --> Campaign
+
+Gateway --> AI
+
+Gateway --> Analytics
+
+Gateway --> Notification
+
+Gateway --> Automation
+
+Auth --> Database
+
+Customer --> Database
+
+Messaging --> Database
+
+Campaign --> Database
+
+Analytics --> Database
+
+Automation --> Database
+
+AI --> Database
+```
+
+Each service has a single responsibility.
+
+---
+
+# API Gateway
+
+Every request enters the system through the API Gateway.
+
+Responsibilities include:
+
+- Authentication
+- Authorization
+- Request Validation
+- Rate Limiting
+- Logging
+- Routing
+- Error Handling
+
+Benefits
+
+- Centralized security
+- Easier monitoring
+- Cleaner architecture
+- Future microservices support
+
+---
+
+# Authentication Service
+
+Responsible for identity verification.
+
+Functions
+
+- Login
+
+- Registration
+
+- Password Reset
+
+- Session Validation
+
+- Token Generation
+
+- Permission Verification
+
+Authentication Flow
+
+```mermaid
+sequenceDiagram
+
+participant User
+
+participant Frontend
+
+participant API
+
+participant Auth
+
+participant Database
+
+User->>Frontend: Login
+
+Frontend->>API: Credentials
+
+API->>Auth: Verify
+
+Auth->>Database: Find User
+
+Database-->>Auth: User Data
+
+Auth-->>API: JWT Token
+
+API-->>Frontend: Success
+```
+
+---
+
+# Customer Service
+
+The Customer Service manages all customer-related operations.
+
+Responsibilities
+
+- Create Customer
+
+- Update Customer
+
+- Delete Customer
+
+- Search Customers
+
+- Customer Tags
+
+- Customer Timeline
+
+- Purchase History
+
+- Lead Status
+
+The Customer Service acts as the central hub for customer information.
+
+---
+
+# Messaging Service
+
+The Messaging Service handles all communication.
+
+Features
+
+- Receive Messages
+
+- Send Messages
+
+- Attachments
+
+- Templates
+
+- Conversation History
+
+- Read Status
+
+- Delivery Status
+
+Workflow
+
+```
+Customer
+
+↓
+
+WhatsApp API
+
+↓
+
+Webhook
+
+↓
+
+Messaging Service
+
+↓
+
+Database
+
+↓
+
+Dashboard
+```
+
+---
+
+# AI Service
+
+Artificial Intelligence operates independently from the core backend.
+
+Responsibilities
+
+- Smart Replies
+
+- Conversation Summary
+
+- Sentiment Analysis
+
+- Customer Intent Detection
+
+- Lead Qualification
+
+- Marketing Suggestions
+
+- Sales Recommendations
+
+Architecture
+
+```mermaid
+flowchart LR
+
+Conversation --> AI
+
+AI --> Context Engine
+
+Context Engine --> LLM
+
+LLM --> Response Generator
+
+Response Generator --> Dashboard
+```
+
+Future versions may include:
+
+- Multiple AI agents
+
+- Vector Search
+
+- Knowledge Base
+
+- AI Memory
+
+---
+
+# Campaign Service
+
+The Campaign Service manages promotional communication.
+
+Capabilities
+
+- Campaign Creation
+
+- Broadcast Scheduling
+
+- Audience Selection
+
+- Delivery Tracking
+
+- Click Analytics
+
+- Campaign Reports
+
+Campaign Flow
+
+```
+Create Campaign
+
+↓
+
+Select Audience
+
+↓
+
+Schedule
+
+↓
+
+Send
+
+↓
+
+Collect Analytics
+
+↓
+
+Dashboard
+```
+
+---
+
+# Automation Service
+
+Workflow automation eliminates repetitive manual tasks.
+
+Examples
+
+Customer registers
+
+↓
+
+Assign Sales Representative
+
+↓
+
+Create CRM Record
+
+↓
+
+Schedule Follow-up
+
+↓
+
+Send Welcome Message
+
+↓
+
+Notify Team
+
+Automation reduces operational overhead while improving response times.
+
+---
+
+# Notification Service
+
+Notifications keep users informed.
+
+Notification Types
+
+- New Lead
+
+- New Customer
+
+- New Order
+
+- Failed Campaign
+
+- AI Suggestions
+
+- Daily Reports
+
+- Team Updates
+
+Supported Channels
+
+- Dashboard
+
+- Email
+
+- WhatsApp
+
+- Push Notifications
+
+---
+
+# Analytics Service
+
+The Analytics Service transforms raw business data into actionable insights.
+
+Metrics
+
+- Customer Growth
+
+- Revenue
+
+- Sales
+
+- Conversion
+
+- Campaign Success
+
+- Response Time
+
+- Customer Satisfaction
+
+- Employee Productivity
+
+Analytics Pipeline
+
+```mermaid
+flowchart LR
+
+Database
+
+-->
+
+Processing
+
+-->
+
+Aggregation
+
+-->
+
+Charts
+
+-->
+
+Dashboard
+```
+
+---
+
+# Database Architecture
+
+WBOS uses PostgreSQL as its primary relational database.
+
+The database is normalized while allowing efficient reporting.
+
+---
+
+## Database Overview
+
+```mermaid
+erDiagram
+
+USERS ||--o{ CUSTOMERS : manages
+
+CUSTOMERS ||--o{ CONVERSATIONS : owns
+
+CONVERSATIONS ||--o{ MESSAGES : contains
+
+CUSTOMERS ||--o{ LEADS : generates
+
+LEADS ||--o{ CAMPAIGNS : targeted_by
+
+CAMPAIGNS ||--o{ ANALYTICS : produces
+
+USERS ||--o{ TASKS : assigned
+
+TASKS ||--o{ NOTIFICATIONS : creates
+```
+
+---
+
+# Core Tables
+
+## Users
+
+Stores employee information.
+
+Fields
+
+- User ID
+
+- Name
+
+- Email
+
+- Password Hash
+
+- Role
+
+- Status
+
+- Created Date
+
+---
+
+## Customers
+
+Stores customer information.
+
+Fields
+
+- Customer ID
+
+- Name
+
+- Phone
+
+- Email
+
+- Tags
+
+- Source
+
+- Lead Status
+
+- Notes
+
+---
+
+## Conversations
+
+Stores every customer conversation.
+
+Fields
+
+- Conversation ID
+
+- Customer ID
+
+- Started At
+
+- Last Activity
+
+- Status
+
+---
+
+## Messages
+
+Stores individual messages.
+
+Fields
+
+- Message ID
+
+- Conversation ID
+
+- Sender
+
+- Timestamp
+
+- Content
+
+- Media
+
+- Status
+
+---
+
+## Campaigns
+
+Stores marketing campaigns.
+
+Fields
+
+- Campaign Name
+
+- Audience
+
+- Status
+
+- Start Date
+
+- End Date
+
+- Performance
+
+---
+
+## Analytics
+
+Stores aggregated metrics.
+
+Examples
+
+- Daily Revenue
+
+- Active Users
+
+- Customer Growth
+
+- Conversion Rate
+
+- Campaign ROI
+
+---
+
+# API Design
+
+WBOS follows REST principles.
+
+Base URL
+
+```
+/api/v1/
+```
+
+---
+
+# Authentication APIs
+
+```
+POST /auth/login
+
+POST /auth/register
+
+POST /auth/logout
+
+POST /auth/forgot-password
+```
+
+---
+
+# Customer APIs
+
+```
+GET /customers
+
+POST /customers
+
+PUT /customers/:id
+
+DELETE /customers/:id
+```
+
+---
+
+# Messaging APIs
+
+```
+GET /messages
+
+POST /messages
+
+GET /conversations
+
+POST /broadcast
+```
+
+---
+
+# Campaign APIs
+
+```
+POST /campaigns
+
+GET /campaigns
+
+PUT /campaigns/:id
+
+DELETE /campaigns/:id
+```
+
+---
+
+# Analytics APIs
+
+```
+GET /analytics
+
+GET /reports
+
+GET /dashboard
+```
+
+---
+
+# AI APIs
+
+```
+POST /ai/reply
+
+POST /ai/summarize
+
+POST /ai/sentiment
+
+POST /ai/marketing
+```
+
+---
+
+# Error Handling Strategy
+
+Every API returns standardized responses.
+
+Successful Response
+
+```json
+{
+  "success": true,
+  "message": "Customer created successfully",
+  "data": {}
+}
+```
+
+Error Response
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": 400,
+    "message": "Invalid request."
+  }
+}
+```
+
+This consistency simplifies frontend development and debugging.
+
+---
+
+# Logging Strategy
+
+Every request generates logs.
+
+Information captured includes:
+
+- Timestamp
+
+- User
+
+- Endpoint
+
+- Request ID
+
+- Response Time
+
+- Status Code
+
+- Error Details
+
+Logging supports troubleshooting, monitoring, and auditing.
+
+---
+
+# Summary
+
+Part 2 of the WBOS System Architecture describes how data flows through the platform, how backend services are organized, how APIs are structured, and how information is stored within the PostgreSQL database. The modular service-oriented design ensures that each component has a clear responsibility, enabling independent development, easier maintenance, and future scalability.
+
+The next section, **Part 3**, will cover the Security Architecture, Deployment Topology, Scalability Strategy, Monitoring, Disaster Recovery, and the Future Evolution of the WBOS platform.
