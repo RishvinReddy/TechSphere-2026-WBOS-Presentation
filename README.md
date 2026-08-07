@@ -9,12 +9,16 @@ WBOS is an AI-powered platform designed to help businesses manage customer engag
 - **University:** Woxsen University
 - **Team:** WBOS
 
-## Presentation
-Download the presentation from:
-- `/ppt/WBOS-TechSphere-2026.pptx`
-
 ## Gallery
-Screenshots and event photos are available in the `assets` folder.
+
+Below are some captures and highlights from the event:
+
+<div align="center">
+  <img src="./image.png" alt="WBOS Dashboard Preview" width="80%" style="border-radius: 8px; margin-bottom: 20px;">
+  <br>
+  <img src="./invitation.jpeg" alt="Event Invitation" width="45%" style="border-radius: 8px; margin-right: 2%;">
+  <img src="./id.jpeg" alt="Event ID" width="45%" style="border-radius: 8px;">
+</div>
 
 ## Author
 **Rishvin Reddy**
