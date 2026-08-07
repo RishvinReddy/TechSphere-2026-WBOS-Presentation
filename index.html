@@ -2122,30 +2122,29 @@
       }
     }
 
-    .slide-gallery .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 2vw;
-      margin-top: 4vh;
-      max-width: 1200px;
+    .slide-gallery {
+      align-items: center;
+      text-align: center;
+    }
+    
+    .slide-gallery h2 {
+      margin-bottom: 4vh;
+    }
+
+    .slide-gallery .gallery-single {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 65vh;
       width: 100%;
     }
     
-    .slide-gallery .gallery-grid img {
-      width: 100%;
+    .slide-gallery .gallery-single img {
+      max-height: 100%;
+      max-width: 100%;
       border-radius: 12px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-      object-fit: cover;
-    }
-    
-    .slide-gallery .gallery-grid .img-main {
-      grid-column: 1 / 3;
-      max-height: 45vh;
-    }
-    
-    .slide-gallery .gallery-grid .img-sub {
-      height: 30vh;
+      object-fit: contain;
     }
   </style>
 </head>
@@ -2850,18 +2849,34 @@
     </div>
   </section>
 
-  <!-- 14 · GALLERY -->
+  <!-- 14 · GALLERY 1 -->
   <section class="slide slide-gallery">
-    <div class="kicker">Event Gallery</div>
+    <div class="kicker">Event Gallery (1/3)</div>
     <h2>TechSphere 2026 Highlights</h2>
-    <div class="gallery-grid">
-      <img src="image.png" alt="Dashboard Preview" class="img-main">
-      <img src="invitation.jpeg" alt="Invitation" class="img-sub">
-      <img src="id.jpeg" alt="Event ID Card" class="img-sub">
+    <div class="gallery-single">
+      <img src="image.png" alt="Dashboard Preview">
     </div>
   </section>
 
-  <!-- 15 · CLOSE -->
+  <!-- 15 · GALLERY 2 -->
+  <section class="slide slide-gallery">
+    <div class="kicker">Event Gallery (2/3)</div>
+    <h2>TechSphere 2026 Highlights</h2>
+    <div class="gallery-single">
+      <img src="invitation.jpeg" alt="Invitation">
+    </div>
+  </section>
+
+  <!-- 16 · GALLERY 3 -->
+  <section class="slide slide-gallery">
+    <div class="kicker">Event Gallery (3/3)</div>
+    <h2>TechSphere 2026 Highlights</h2>
+    <div class="gallery-single">
+      <img src="id.jpeg" alt="Event ID Card">
+    </div>
+  </section>
+
+  <!-- 17 · CLOSE -->
   <section class="slide slide-close">
     <div class="close-left">
       <div class="kicker">Thank you</div>
