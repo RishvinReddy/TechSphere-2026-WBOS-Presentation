@@ -713,6 +713,422 @@ The documentation includes:
 
 ---
 
+# 🛠 Installation
+
+## Prerequisites
+
+Before setting up WBOS locally, ensure your development environment includes the following tools.
+
+### Software Requirements
+
+| Software | Version |
+|-----------|----------|
+| Node.js | 20+ |
+| npm | Latest |
+| Git | Latest |
+| PostgreSQL | 16+ |
+| VS Code | Recommended |
+| Google Chrome | Latest |
+
+---
+
+## Clone Repository
+
+```bash
+git clone https://github.com/RishvinReddy/TechSphere-2026-WBOS-Presentation.git
+```
+
+Navigate into the project.
+
+```bash
+cd TechSphere-2026-WBOS-Presentation
+```
+
+---
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## Configure Environment
+
+Create an environment file.
+
+```bash
+cp .env.example .env
+```
+
+Example
+
+```env
+DATABASE_URL=
+OPENAI_API_KEY=
+WHATSAPP_ACCESS_TOKEN=
+JWT_SECRET=
+VERCEL_URL=
+```
+
+---
+
+## Start Development Server
+
+```bash
+npm run dev
+```
+
+Application starts on
+
+```
+http://localhost:3000
+```
+
+---
+
+# 📂 Repository Structure
+
+```
+TechSphere-2026-WBOS-Presentation
+│
+├── assets/
+│
+├── docs/
+│
+│   ├── 01-Overview/
+│   ├── 02-Technical/
+│   ├── 03-Business/
+│   ├── 04-Presentation/
+│   └── 05-Misc/
+│
+├── presentation/
+│
+├── index.html
+├── presentation.html
+├── styles.css
+├── script.js
+│
+└── README.md
+```
+
+---
+
+# 📖 Documentation Guide
+
+The repository contains comprehensive documentation.
+
+## 01 — Overview
+
+Introduces WBOS.
+
+Includes
+
+- Abstract
+- Executive Summary
+- Problem Statement
+- Objectives
+
+---
+
+## 02 — Technical
+
+Technical documentation covering
+
+- Technology Stack
+- System Architecture
+- Implementation
+- User Workflow
+
+---
+
+## 03 — Business
+
+Business documentation including
+
+- Business Value
+- Features
+- Future Scope
+
+---
+
+## 04 — Presentation
+
+Presentation resources
+
+- Demo Guide
+- Speaker Notes
+- FAQ
+
+---
+
+## 05 — Miscellaneous
+
+Supporting documentation
+
+- References
+- Changelog
+- License
+
+---
+
+# 🗂 Documentation Hierarchy
+
+```mermaid
+flowchart TD
+
+README
+
+-->
+
+Overview
+
+-->
+
+Technical
+
+-->
+
+Business
+
+-->
+
+Presentation
+
+-->
+
+Miscellaneous
+```
+
+Every section builds upon the previous one, providing readers with a structured understanding of the project.
+
+---
+
+# 🎨 Design Philosophy
+
+WBOS follows a design philosophy centered around simplicity, scalability, and usability.
+
+The user interface has been designed to minimize cognitive load while providing quick access to essential business information.
+
+Key design principles include:
+
+- Clean layouts
+- Consistent navigation
+- Responsive interfaces
+- Accessibility
+- Minimal clicks
+- Modern aesthetics
+- Mobile-friendly design
+
+The objective is to help users focus on business operations rather than learning complicated software.
+
+---
+
+# 🏛 Architecture Overview
+
+WBOS adopts a layered architecture.
+
+```mermaid
+flowchart TB
+
+Presentation
+
+-->
+
+Application
+
+-->
+
+Services
+
+-->
+
+Database
+
+-->
+
+Infrastructure
+```
+
+Each layer is responsible for a specific set of tasks, improving maintainability and scalability.
+
+---
+
+# 🔄 Workflow Overview
+
+The following illustrates how information flows through WBOS.
+
+```mermaid
+flowchart LR
+
+Customer
+
+-->
+
+WhatsApp
+
+-->
+
+WBOS
+
+-->
+
+AI
+
+-->
+
+CRM
+
+-->
+
+Analytics
+
+-->
+
+Dashboard
+```
+
+Every customer interaction contributes to business intelligence.
+
+---
+
+# 📁 Assets
+
+The **assets/** directory contains media resources used throughout the project.
+
+Examples include:
+
+- Project Logo
+- Screenshots
+- Architecture Diagrams
+- Event Photos
+- Demo Images
+- Icons
+- Banners
+
+These resources support both the GitHub Pages presentation and project documentation.
+
+---
+
+# 📑 Documentation Standards
+
+All documentation within WBOS follows a consistent structure.
+
+Each document includes:
+
+- Overview
+- Objectives
+- Detailed Explanation
+- Diagrams
+- Tables
+- Examples
+- Summary
+- Conclusion
+
+Markdown is used throughout to ensure readability on GitHub.
+
+---
+
+# 🧪 Demonstration Resources
+
+The repository contains everything required to understand and present WBOS.
+
+Available resources include:
+
+- Interactive Presentation
+- PowerPoint Presentation
+- PDF Documentation
+- Architecture Diagrams
+- Demo Guide
+- Speaker Notes
+- FAQ
+- Technical Documentation
+
+This enables reviewers, faculty members, and recruiters to explore the project independently.
+
+---
+
+# 🌐 GitHub Pages
+
+The project is designed to be hosted using GitHub Pages.
+
+Deployment includes:
+
+- Landing Page
+- Interactive Presentation
+- Documentation
+- Project Resources
+
+Once published, visitors can access the presentation directly through a browser without downloading any files.
+
+---
+
+# 📷 Screenshots
+
+Representative screenshots included in the repository demonstrate:
+
+- Dashboard
+- Customer Management
+- Messaging
+- AI Assistant
+- Marketing
+- Analytics
+- Reports
+- System Architecture
+
+Screenshots are stored in the **assets/** directory.
+
+---
+
+# 🎥 Demonstration Video
+
+A walkthrough video is planned to provide a guided tour of the platform.
+
+The video will cover:
+
+- Project Introduction
+- Live Demonstration
+- Architecture
+- Business Value
+- Future Roadmap
+
+This will make the project easier to understand for reviewers and recruiters.
+
+---
+
+# 🤝 Contributing
+
+Although this repository primarily documents the TechSphere 2026 presentation, contributions that improve documentation, diagrams, or presentation quality are welcome.
+
+If the project becomes open source in the future, contribution guidelines will be expanded to include:
+
+- Development standards
+- Coding conventions
+- Pull request process
+- Issue reporting
+- Feature proposals
+
+---
+
+# 📌 What's Next?
+
+The remaining sections of this README will cover:
+
+- Security
+- Performance
+- Scalability
+- Future Roadmap
+- Team
+- TechSphere 2026
+- License
+- Acknowledgements
+- Contact Information
+
+These sections provide additional insight into the project's long-term vision and operational principles.
+
+---
+
 ## Author
 **Rishvin Reddy**
 - Portfolio: https://rishvinreddy.vercel.app
