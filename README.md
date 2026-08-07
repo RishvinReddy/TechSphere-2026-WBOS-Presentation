@@ -463,29 +463,13 @@ into a single ecosystem.
 
 ```mermaid
 flowchart LR
-
-Customer
-
--->
-
-WhatsApp
-
--->
-
-WBOS
-
+Customer --> WhatsApp --> WBOS
 WBOS --> CRM
-
 WBOS --> AI
-
 WBOS --> Marketing
-
 WBOS --> Automation
-
 WBOS --> Analytics
-
 WBOS --> Reports
-
 WBOS --> Dashboard
 ```
 
@@ -564,31 +548,14 @@ Organizations implementing WBOS can expect:
 
 ```mermaid
 flowchart TB
-
-Customer
-
--->
-
-WhatsApp Business
-
--->
-
-WBOS Platform
-
-WBOS Platform --> CRM
-
-WBOS Platform --> AI Assistant
-
-WBOS Platform --> Marketing
-
-WBOS Platform --> Workflow Engine
-
-WBOS Platform --> Analytics
-
-WBOS Platform --> Reports
-
-Analytics --> Business Dashboard
-
+Customer --> WhatsAppBusiness["WhatsApp Business"] --> WBOSPlatform["WBOS Platform"]
+WBOSPlatform --> CRM
+WBOSPlatform --> AIAssistant["AI Assistant"]
+WBOSPlatform --> Marketing
+WBOSPlatform --> WorkflowEngine["Workflow Engine"]
+WBOSPlatform --> Analytics
+WBOSPlatform --> Reports
+Analytics --> BusinessDashboard["Business Dashboard"]
 Reports --> Management
 ```
 
@@ -879,28 +846,7 @@ Supporting documentation
 
 ```mermaid
 flowchart TD
-
-README
-
--->
-
-Overview
-
--->
-
-Technical
-
--->
-
-Business
-
--->
-
-Presentation
-
--->
-
-Miscellaneous
+README --> Overview --> Technical --> Business --> Presentation --> Miscellaneous
 ```
 
 Every section builds upon the previous one, providing readers with a structured understanding of the project.
@@ -933,24 +879,7 @@ WBOS adopts a layered architecture.
 
 ```mermaid
 flowchart TB
-
-Presentation
-
--->
-
-Application
-
--->
-
-Services
-
--->
-
-Database
-
--->
-
-Infrastructure
+Presentation --> Application --> Services --> Database --> Infrastructure
 ```
 
 Each layer is responsible for a specific set of tasks, improving maintainability and scalability.
@@ -963,32 +892,7 @@ The following illustrates how information flows through WBOS.
 
 ```mermaid
 flowchart LR
-
-Customer
-
--->
-
-WhatsApp
-
--->
-
-WBOS
-
--->
-
-AI
-
--->
-
-CRM
-
--->
-
-Analytics
-
--->
-
-Dashboard
+Customer --> WhatsApp --> WBOS --> AI --> CRM --> Analytics --> Dashboard
 ```
 
 Every customer interaction contributes to business intelligence.
@@ -1358,24 +1262,7 @@ WBOS follows:
 
 ```mermaid
 flowchart TB
-
-Presentation
-
--->
-
-Application
-
--->
-
-Services
-
--->
-
-Database
-
--->
-
-Infrastructure
+Presentation --> Application --> Services --> Database --> Infrastructure
 ```
 
 Each layer can evolve independently.
@@ -1386,30 +1273,12 @@ Each layer can evolve independently.
 
 ```mermaid
 flowchart LR
-
-Load Balancer
-
--->
-
-API 1
-
-Load Balancer
-
--->
-
-API 2
-
-Load Balancer
-
--->
-
-API 3
-
-API 1 --> Database
-
-API 2 --> Database
-
-API 3 --> Database
+LoadBalancer["Load Balancer"] --> API1["API 1"]
+LoadBalancer --> API2["API 2"]
+LoadBalancer --> API3["API 3"]
+API1 --> Database
+API2 --> Database
+API3 --> Database
 ```
 
 Multiple application servers allow WBOS to handle increasing user traffic.
